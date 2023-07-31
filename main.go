@@ -5,7 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"log"
 )
+
+const ACHAINABLE_NAMES_PATH string = "ACHAINABLE_NAMES.txt"
 
 type Post struct {
 	Id     int    `json:"id"`
@@ -15,20 +18,27 @@ type Post struct {
 }
 
 func main() {
-	posturl := "https://label-production.graph.tdf-labs.io/v1/run/system-labels"
+	log.SetPrefix("[ACB]: ")
+	log.SetFlags(0)
 
-	body := []byte(`{
-		"title": "Post title",''
-		"body": "Post description",
-		"userId": 1
-	}`)
+	config := GetServerConfig()
+	
+	/// Build Body
+	basicType := MockBasicType()
+	jsonStr, _ := json.Marshal(basicType)
 
-	r, err := http.NewRequest("POST", posturl, bytes.NewBuffer(body))
+	url := config.Host
+	key := config.Key
+	fmt.Println("URL: ", url)
+	fmt.Println("KEY: ", key)
+
+	r, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
 	if err != nil {
 		panic(err)
 	}
 
 	r.Header.Add("Content-Type", "application/json")
+	r.Header.Add("Authorization", key)
 
 	client := &http.Client{}
 	res, err := client.Do(r)
@@ -38,18 +48,22 @@ func main() {
 
 	defer res.Body.Close()
 
-	post := &Post{}
-	derr := json.NewDecoder(res.Body).Decode(post)
+	resBody := &MockRes{}
+	derr := json.NewDecoder(res.Body).Decode(resBody)
 	if derr != nil {
 		panic(derr)
 	}
 
-	if res.StatusCode != http.StatusCreated {
-		panic(res.Status)
-	}
+	fmt.Println("[main] res StatusCode: ", res.StatusCode)
+	// if res.StatusCode != http.StatusCreated {
+	// 	panic(res.Status)
+	// }
 
-	fmt.Println("Id:", post.Id)
-	fmt.Println("Title:", post.Title)
-	fmt.Println("Body:", post.Body)
-	fmt.Println("UserId:", post.UserId)
+	details := resBody.Details
+	names := details.BodyName.Message
+	// fmt.Println("Message:", resBody.Message)
+	// fmt.Println("Details:", details)
+	content := FilterNames(names)
+	WriteToFile(ACHAINABLE_NAMES_PATH, content)
+	// ParseMockNames(details.BodyName.Message)
 }
