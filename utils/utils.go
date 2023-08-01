@@ -1,15 +1,15 @@
-package main
+package utils
 
 import (
 	"fmt"
-	"strings"
 	"os"
+	"strings"
 )
 
 func check(e error) {
-    if e != nil {
-        panic(e)
-    }
+	if e != nil {
+		panic(e)
+	}
 }
 
 func FilterNames(message string) string {
@@ -31,8 +31,8 @@ func WriteToFile(path string, content string) {
 	defer f.Close()
 
 	n, err := f.WriteString(content)
-    check(err)
-    fmt.Printf("wrote %d bytes\n", n)
+	check(err)
+	fmt.Printf("Updated %d bytes\n", n)
 
 	f.Sync()
 }

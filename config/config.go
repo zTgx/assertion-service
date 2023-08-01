@@ -8,8 +8,9 @@ import (
 )
 
 type Config struct {
-	Host string `json:"host"`
-	Key  string `json:"key"`
+	Host     string `json:"host"`
+	Key      string `json:"key"`
+	NamePath string `json:"name_path"`
 }
 
 func GetServerConfig() Config {
@@ -19,7 +20,7 @@ func GetServerConfig() Config {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("Successfully Opened release-config.json")
+	// fmt.Println("Successfully Opened release-config.json")
 	// defer the closing of our jsonFile so that we can parse it later on
 	defer jsonFile.Close()
 

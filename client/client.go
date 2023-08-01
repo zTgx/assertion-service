@@ -15,10 +15,12 @@ type AClient struct {
 
 func New() AClient {
 	config := config.GetServerConfig()
-	url := config.Host
-	key := config.Key
-	fmt.Println("URL: ", url)
-	fmt.Println("KEY: ", key)
+	fmt.Println("Config: ", config)
+
+	// url := config.Host
+	// key := config.Key
+	// fmt.Println("URL: ", url)
+	// fmt.Println("KEY: ", key)
 
 	return AClient{config}
 }
@@ -43,12 +45,10 @@ func (aclient *AClient) Send() *http.Response {
 	}
 
 	// defer res.Body.Close()
-	fmt.Println("RES: ", res)
 	return res
 }
 
 func Body() *bytes.Buffer {
-	// / Build Body
 	basicType := params.MockBasicType()
 	jsonStr, _ := json.Marshal(basicType)
 	return bytes.NewBuffer(jsonStr)
