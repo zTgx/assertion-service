@@ -3,7 +3,6 @@ package client
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"golang/acb/config"
 	"golang/acb/params"
 	"net/http"
@@ -15,7 +14,7 @@ type AClient struct {
 
 func New() AClient {
 	config := config.GetServerConfig()
-	fmt.Println("Config: ", config)
+	// fmt.Println("Config: ", config)
 
 	// url := config.Host
 	// key := config.Key
@@ -43,6 +42,34 @@ func (aclient *AClient) Send() *http.Response {
 	if err != nil {
 		panic(err)
 	}
+
+	// defer res.Body.Close()
+	return res
+}
+
+func (aclient *AClient) Post(param any) *http.Response {
+	url := aclient.Config.Host
+	key := aclient.Config.Key
+
+	jsonStr, _ := json.Marshal(param)
+	// fmt.Println("json: ", string(jsonStr))
+
+	body := bytes.NewBuffer(jsonStr)
+	r, err := http.NewRequest("POST", url, body)
+	if err != nil {
+		panic(err)
+	}
+
+	r.Header.Add("Content-Type", "application/json")
+	r.Header.Add("Authorization", key)
+
+	client := &http.Client{}
+	res, err := client.Do(r)
+	if err != nil {
+		panic(err)
+	}
+
+	// fmt.Println("res: ", res)
 
 	// defer res.Body.Close()
 	return res

@@ -34,3 +34,24 @@ func UpdateMockName() {
 
 	updateNames(resBody)
 }
+
+func ClassOfYear(address string) (bool, string) {
+	client := New()
+
+	name := "Account created between {dates}"
+	chain := "ethereum"
+	from := "2023-01-01"
+	to := "2023-01-01"
+	param := params.NewReqClassOfYear(chain, from, to)
+	req := params.NewReqBody(name, address, param)
+
+	res := client.Post(req)
+
+	resBody := &params.ResBody{}
+	derr := json.NewDecoder(res.Body).Decode(resBody)
+	if derr != nil {
+		panic(derr)
+	}
+
+	return resBody.Result, resBody.Metadata[0]
+}
