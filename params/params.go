@@ -1,16 +1,13 @@
-package main
-
-import (
-)
+package params
 
 type Params struct {
 	Chain string `json:"chain"`
 }
 
 type ParamsWithBasicType struct {
-	Name string `json:"name"`
+	Name    string `json:"name"`
 	Address string `json:"address"`
-	Params Params `json:"params"`
+	Params  Params `json:"params"`
 }
 
 func MockBasicType() ParamsWithBasicType {
@@ -20,7 +17,7 @@ func MockBasicType() ParamsWithBasicType {
 
 type BodyName struct {
 	Message string `json:"message"`
-	Value string `json:"value"`
+	Value   string `json:"value"`
 }
 
 type Details struct {
@@ -28,6 +25,6 @@ type Details struct {
 }
 
 type MockRes struct {
-	Message string `json:"message"`
+	Message string  `json:"message"`
 	Details Details `json:"details"`
 }
